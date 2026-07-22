@@ -1,0 +1,7 @@
+plugins {
+    id 'com.android.application' version '8.2.2' apply false
+    // Needed for Firebase Cloud Messaging (push notifications).
+    // Only actually applied in app/build.gradle if google-services.json exists,
+    // so the project still builds fine before Firebase is set up.
+    id 'com.google.gms.google-services' version '4.4.2' apply false
+}
