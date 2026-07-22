@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">মিরন ইলেকট্রনিক্স</string>
-
-    <!-- Push notifications (Firebase Cloud Messaging) -->
-    <string name="default_notification_channel_id">miron_default_channel</string>
-    <string name="default_notification_channel_name">সাধারণ নোটিফিকেশন</string>
-    <string name="default_notification_channel_desc">অফার, আপডেট ও গুরুত্বপূর্ণ তথ্য</string>
-</resources>

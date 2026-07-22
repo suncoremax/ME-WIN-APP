@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="ic_launcher_background">#0A0A0A</color>
-    <!-- Accent color Android tints the small status-bar notification icon
-         with — matches the red from the SPEED logo -->
-    <color name="notification_accent">#E30613</color>
-</resources>
