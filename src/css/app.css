@@ -55,6 +55,7 @@ svg.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9
 .dots i.on{background:var(--bl2);border-color:var(--bl2);transform:scale(1.12);box-shadow:0 0 14px rgba(16,185,129,.7)}
 .dots.shake{animation:shake .4s}
 @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.lg-card.busy .pad{opacity:.45;pointer-events:none}.lg-card.busy .lg-err{color:#A7F3D0}.spn{display:inline-block;width:13px;height:13px;margin-right:8px;vertical-align:-2px;border:2px solid rgba(167,243,208,.35);border-top-color:#6EE7B7;border-radius:50%;animation:spn .7s linear infinite}@keyframes spn{to{transform:rotate(360deg)}}
 .lg-err{min-height:20px;font-size:12.5px;color:#FCA5A5;margin-bottom:10px}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .pad button{height:56px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;font:600 21px var(--f-disp);transition:.12s var(--ease)}

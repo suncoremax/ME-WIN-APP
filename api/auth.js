@@ -39,19 +39,23 @@ module.exports = D.route(async (req) => {
     D.method(req, 'POST');
     const ip = clientIp(req);
     const since = new Date(Date.now() - WINDOW_MIN * 60e3).toISOString();
-    const { count } = await supabase.from('login_attempts').select('*', { count: 'exact', head: true })
-      .eq('ip', ip).eq('ok', false).gte('at', since);
+    const pin = String((req.body || {}).pin || '').trim();
+    // the throttle check and the user lookup are independent → run them together (fewer round trips)
+    const [{ count }, found] = await Promise.all([
+      supabase.from('login_attempts').select('*', { count: 'exact', head: true }).eq('ip', ip).eq('ok', false).gte('at', since),
+      D.validPin(pin)
+        ? supabase.from('app_users').select('id,name,role,company_id,active,token_ver,must_change_pw,can_finance').eq('pin_hash', D.hashPin(pin)).maybeSingle()
+        : Promise.resolve({ data: null, error: null })
+    ]);
     if ((count || 0) >= MAX_FAILS) throw new D.HttpError(429, 'অনেকবার ভুল PIN দেওয়া হয়েছে। ' + WINDOW_MIN + ' মিনিট পরে আবার চেষ্টা করুন');
 
-    const pin = String((req.body || {}).pin || '').trim();
     const fail = async () => {
       await supabase.from('login_attempts').insert({ ip, ok: false });
       throw new D.HttpError(401, 'ভুল PIN');
     };
     if (!D.validPin(pin)) return fail();
 
-    let { data: u, error } = await supabase.from('app_users')
-      .select('id,name,role,company_id,active,token_ver,must_change_pw,can_finance').eq('pin_hash', D.hashPin(pin)).maybeSingle();
+    let { data: u, error } = found;
     if (error) throw error;
 
     // First ever start: nobody exists yet → the bootstrap PIN creates the owner.
@@ -68,10 +72,13 @@ module.exports = D.route(async (req) => {
     }
     if (!u || !u.active) return fail();
 
-    await supabase.from('login_attempts').insert({ ip, ok: true });
-    await supabase.from('app_users').update({ last_login: new Date().toISOString() }).eq('id', u.id);
-    await D.audit(u, 'login', u.company_id, null);
-    return { token: D.signToken(u), user: await shape(u) };
+    const [, , , user] = await Promise.all([
+      supabase.from('login_attempts').insert({ ip, ok: true }),
+      supabase.from('app_users').update({ last_login: new Date().toISOString() }).eq('id', u.id),
+      D.audit(u, 'login', u.company_id, null),
+      shape(u)
+    ]);
+    return { token: D.signToken(u), user };
   }
 
   // ── change my own PIN (needs the old one)

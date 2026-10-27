@@ -17,6 +17,11 @@ function showLogin(msg) {
   l.innerHTML = padHtml('SHAKIB TRADERS', 'আপনার ৫ সংখ্যার PIN দিন');
   if (msg) $('#lgerr').textContent = msg;
 }
+function padBusy(on, msg) {
+  var c = $('.lg-card'); if (!c) return;
+  c.classList.toggle('busy', !!on);
+  var e = $('#lgerr'); if (e) e.innerHTML = on ? '<span class="spn"></span>' + esc(msg || '') : '';
+}
 function padRefresh() {
   $$('#dots i').forEach(function (d, i) { d.classList.toggle('on', i < PAD.buf.length); });
 }
@@ -44,22 +49,23 @@ document.addEventListener('keydown', function (e) {
 async function padDone() {
   var pin = PAD.buf;
   if (PAD.mode === 'login') {
-    PAD.busy = true;
+    PAD.busy = true; padBusy(true, 'লগইন হচ্ছে…');
+    var slow = setTimeout(function () { padBusy(true, 'সার্ভার চালু হচ্ছে, একটু অপেক্ষা করুন…'); }, 5000);
     try {
       var j = await api('auth', { body: { pin: pin } });
       S.token = j.token; store.set('ax_token', j.token);
       PAD.old = pin;
       if (j.user.mustChange) { S.user = j.user; PAD.mode = 'new'; PAD.buf = ''; $('#login').innerHTML = padHtml('নতুন PIN তৈরি করুন', 'নিজের একটি নতুন ৫ সংখ্যার PIN দিন'); }
       else enter(j.user);
-    } catch (e) { padErr(e.message); }
-    PAD.busy = false;
+    } catch (e) { padBusy(false); padErr(e.message); }
+    clearTimeout(slow); PAD.busy = false;
   } else if (PAD.mode === 'new') {
     if (pin === PAD.old) return padErr('আগের PIN আবার দেওয়া যাবে না');
     PAD.first = pin; PAD.mode = 'confirm'; PAD.buf = '';
     $('#login').innerHTML = padHtml('PIN আবার দিন', 'নিশ্চিত করতে একই PIN আবার লিখুন');
   } else if (PAD.mode === 'confirm') {
     if (pin !== PAD.first) { PAD.mode = 'new'; $('#login').innerHTML = padHtml('নতুন PIN তৈরি করুন', 'নিজের একটি নতুন ৫ সংখ্যার PIN দিন'); return padErr('দুইবার একই PIN হয়নি, আবার দিন'); }
-    PAD.busy = true;
+    PAD.busy = true; padBusy(true, 'সেভ হচ্ছে…');
     try {
       var r = await api('auth?action=change', { body: { oldPin: PAD.old, newPin: pin } });
       S.token = r.token; store.set('ax_token', r.token);
