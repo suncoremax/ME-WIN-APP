@@ -1,0 +1,20 @@
+-- SHAKIB TRADERS: companies + due clients (run FIRST, after schema.sql)
+insert into companies(name,sort,color) values ('Mr.Noddles',1,'#10B981') on conflict (name) do nothing;
+insert into companies(name,sort,color) values ('Pasturized',2,'#06B6D4') on conflict (name) do nothing;
+insert into companies(name,sort,color) values ('Jhotphot',3,'#7C3AED') on conflict (name) do nothing;
+insert into companies(name,sort,color) values ('Abul Kahir',4,'#F59E0B') on conflict (name) do nothing;
+insert into clients(company_id,name) select null,'রহিম ট্রেডার্স' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('রহিম ট্রেডার্স'));
+insert into clients(company_id,name) select null,'করিম স্টোর' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('করিম স্টোর'));
+insert into clients(company_id,name) select null,'আলম ভাই ডেইরি' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('আলম ভাই ডেইরি'));
+insert into clients(company_id,name) select null,'সোহাগ নুডলস' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('সোহাগ নুডলস'));
+insert into clients(company_id,name) select null,'মেসার্স হক এন্ড সন্স' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('মেসার্স হক এন্ড সন্স'));
+insert into clients(company_id,name) select null,'বাবুল সুপার শপ' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('বাবুল সুপার শপ'));
+insert into clients(company_id,name) select null,'নিউ মার্কেট স্টোর' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('নিউ মার্কেট স্টোর'));
+insert into clients(company_id,name) select null,'রহমান কোল্ড স্টোরেজ' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('রহমান কোল্ড স্টোরেজ'));
+insert into clients(company_id,name) select null,'মোহনা ট্রেডিং' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('মোহনা ট্রেডিং'));
+insert into clients(company_id,name) select null,'শাহিন এন্টারপ্রাইজ' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('শাহিন এন্টারপ্রাইজ'));
+insert into clients(company_id,name) select null,'খান এন্ড ব্রাদার্স' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('খান এন্ড ব্রাদার্স'));
+insert into clients(company_id,name) select null,'মেঘনা ডিস্ট্রিবিউটর' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('মেঘনা ডিস্ট্রিবিউটর'));
+insert into clients(company_id,name) select null,'সোনার বাংলা ট্রেডার্স' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('সোনার বাংলা ট্রেডার্স'));
+insert into clients(company_id,name) select null,'পদ্মা এন্টারপ্রাইজ' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('পদ্মা এন্টারপ্রাইজ'));
+insert into clients(company_id,name) select null,'জামুনা স্টোর' where not exists (select 1 from clients where company_id is null and lower(btrim(name))=lower('জামুনা স্টোর'));
