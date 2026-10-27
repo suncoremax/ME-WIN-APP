@@ -1,0 +1,19 @@
+{
+  "name": "shakib-traders",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SHAKIB TRADERS — multi-company distributor management app (Vercel + Supabase)",
+  "engines": { "node": "22.x" },
+  "scripts": {
+    "build": "node build.js",
+    "test": "bash test/run.sh path/to/workbook.xlsx"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.5",
+    "pg": "^8.23.1",
+    "xlsx": "^0.18.5"
+  }
+}
