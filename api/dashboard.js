@@ -439,9 +439,13 @@ module.exports = async (req, res) => {
       // road assigned to me, and has that rule been active since on/
       // before today (active_from <= today)?
       const todayStr = bdtToday();
-      const { data: roadDutyRows } = await supabase.from('road_weekly_plans')
-        .select('*').eq('so_id', userId).eq('weekday', weekdayOf(todayStr)).lte('active_from', todayStr);
-      const roadDuty = (roadDutyRows || []).map(mapRoadWeeklyPlan);
+      // v5.23 — Friday is the weekly holiday: nobody visits on a Friday.
+      let roadDuty = [];
+      if (weekdayOf(todayStr) !== 5) {
+        const { data: roadDutyRows } = await supabase.from('road_weekly_plans')
+          .select('*').eq('so_id', userId).eq('weekday', weekdayOf(todayStr)).lte('active_from', todayStr);
+        roadDuty = (roadDutyRows || []).map(mapRoadWeeklyPlan);
+      }
 
       // ── V55 #56 / V57 — "আজকের মোট বিক্রয়" (Today's Total Sale) widget ──
       // Pieces sold today by this SO's assigned DSRs (give − return), PLUS
@@ -629,9 +633,17 @@ module.exports = async (req, res) => {
       let _mySoId = '';
       try { const { data: _me } = await supabase.from('srs').select('so_id').eq('id', userId).maybeSingle(); _mySoId = String((_me && _me.so_id) || ''); } catch (_) { }
       const _dutyFilter = _mySoId ? ('dsr_id.eq.' + userId + ',so_id.eq.' + _mySoId) : ('dsr_id.eq.' + userId);
-      const { data: roadDutyRows } = await supabase.from('road_weekly_plans')
-        .select('*').or(_dutyFilter).eq('weekday', weekdayOf(yesterdayStr)).lte('active_from', yesterdayStr);
-      const roadDuty = (roadDutyRows || []).map(mapRoadWeeklyPlan);
+      // v5.23 — the DSR follows the SO by one WORKING day: Friday is a holiday, so on Saturday the DSR
+      // goes to the road the SO visited on THURSDAY, and on Friday there is no delivery duty at all.
+      let roadDuty = [];
+      const _todayWd = weekdayOf(bdtToday());
+      if (_todayWd !== 5) {
+        let _visitDay = yesterdayStr;
+        if (weekdayOf(_visitDay) === 5) _visitDay = addDaysStr(_visitDay, -1);
+        const { data: roadDutyRows } = await supabase.from('road_weekly_plans')
+          .select('*').or(_dutyFilter).eq('weekday', weekdayOf(_visitDay)).lte('active_from', _visitDay);
+        roadDuty = (roadDutyRows || []).map(mapRoadWeeklyPlan);
+      }
 
       return res.json({
         ok: true,

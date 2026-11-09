@@ -12,6 +12,15 @@
 
 # Changelog
 
+## 5.23.0
+**Database: no change.** API: `dashboard.js` edited.
+
+- **Memos:** SKU removed from every memo; each product is now 2 lines (name + amount, then qty × rate); the small headings are gone, so "গ্রহণকারী (DSR/SO): নাম" is ONE line. Result: much shorter memo, fits WhatsApp.
+- **Slip lists (details):** each slip row shows "📦 N টি পণ্য" at the top-left, on the same row as the time.
+- **Product pickers (give / return / point sale):** price now reads "প্রতি কেস ৳…"; tapping a product only flips its tick (no full-screen re-render → no glitch / scroll jump).
+- **Stock / low-stock list:** price line removed under the name; quantity shows cases + pieces (SO too).
+- **Road duty:** Friday is a holiday. DSR duty = the road the SO visited on the previous WORKING day (Saturday → Thursday's road); no duty on Friday for SO or DSR.
+
 ## 5.22.0
 **Database: no change.** API: `shops.js` edited (ledger now also sends each product's own commission / discount).
 
