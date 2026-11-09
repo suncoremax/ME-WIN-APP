@@ -1385,6 +1385,10 @@ window.__onAndroidBack = function() {
     var slipOv = document.getElementById('slip-overlay');
     if (slipOv) { slipOv.remove(); return true; }
 
+    // 1a) v5.23.1 — shop ledger page now sits ABOVE the DSR box pop-up, so back closes it first
+    var ldgTop = document.getElementById('ldg-pg');
+    if (ldgTop && ldgTop.style.display !== 'none') { closeShopLedger(); return true; }
+
     // 1b) DSR transaction pop-up (box details / name picker)
     var dmdP = document.getElementById('dmd-pop');
     if (dmdP) { dmdPopClose(); return true; }
@@ -5513,7 +5517,7 @@ function _ldgEl() {
   var el = document.getElementById('ldg-pg');
   if (!el) {
     el = document.createElement('div'); el.id = 'ldg-pg';
-    el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:900;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 90px';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9100;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 90px';
     document.body.appendChild(el);
   }
   el.style.display = 'block'; document.body.style.overflow = 'hidden';

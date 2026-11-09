@@ -1,3 +1,11 @@
+# Changelog
+
+## 5.23.1
+**Database: no change.** API: no change. UI only (`src/index.html`).
+
+- **Fixed: shop name inside the DSR transaction boxes did nothing when tapped.** The shop's খাতা (ledger) page opened *behind* the box pop-up (page layer 900 vs pop-up layer 9000), so it looked as if nothing happened. This affected every box that lists shops: মোট বাকি (top red box), আজকের বাকি, পূর্বের বাকি আদায়, জমা দিতে হবে, কমিশন, ছাড়, ড্যামেজ, পয়েন্ট সেল, and the "N টি দোকানে বিক্রয়" details box (owner/manager/SO "DSR লেনদেন" page and DSR home).
+- The ledger page now opens above the pop-up. Closing it (✕ or phone back button) returns you to the same pop-up where you left off.
+
 ## v5.18.1 — Speed release
 - Browser: icon + number-fit scanners now touch only changed parts of the page; 2–10 min GET cache for stable lists (cleared on every save/logout); chat refresh 60 s; location check every 10 min (sends only if moved >100 m, heartbeat 20 min); search boxes debounced (150 ms local / 400 ms server).
 - Startup: load-all, notice, deposit and advance list now go out together and are cached.
